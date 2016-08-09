@@ -1,0 +1,21 @@
+{
+  "name": "heimdall",
+  "version": "1.0.0",
+  "description": "A simple value watcher for Nodejs (Express) Apps",
+  "main": "heimdall.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ayodejiakanji@bitbucket.org/ayodejiakanji/heimdal.git"
+  },
+  "keywords": [
+    "Heimdall",
+    "Value",
+    "Watcher"
+  ],
+  "author": "4y0",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/ayodejiakanji/heimdal#readme"
+}
