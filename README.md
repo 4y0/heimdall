@@ -37,6 +37,39 @@ res.Heimdall.multiArrayCheck(req.query, ['client_id','client_secret']);
 var client_id     = req.query.client_id;
 var client_secret = req.query.client_secret;
 ```
+### Example Use-case 3
+**Typical flow**
+```
+var user_id = req.params.user_id;
+if(!user_id)
+{
+	res.fail('User  id is required');	
+}
+else
+{
+	
+	UserModel.findOne(user_id, function(user, err){
+		if(!user){
+		   res.fail('User not found');
+		}
+		else
+		{
+			//other stuff to happen if user is found
+	    }
+	});
+
+}
+```
+**Heimdall flow**
+```
+res.Heimdall.emptyCheck(req.params.user_id, 'User id is required', 'fail');
+var user_id = req.params.user_id;
+UserModel.findOne(user_id, function(user, err){
+	res.Heimdall.emptyCheck(user, 'User not found', 'fail');
+	//other stuff to happen here
+});
+```
+
 ### How to use
  Intall using npm `sudo npm install heimdall`
  
