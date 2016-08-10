@@ -125,6 +125,7 @@ Heimdall.prototype.emptyCheck = function(value, message, other, strictly_undefin
 			{  
 				this.fail(message);
 			}
+			throw new HeimdallError('Heimdall Precludes Exec from proceeding because: ' + message);
 		}
 	}
 }
@@ -181,7 +182,27 @@ Heimdall.prototype.forbidden = function (value, message)
 	this.emptyCheck(value, message, 'forbidden');
 }
 
-module.exports = function (req,res){
+Heimdall.initHeimdall = function(req, res, next)
+{
 	res.Heimdall = new Heimdall(res);
+	next();
 }
+
+Heimdall.initHeimdallErrorHandler = function(err, req, res, next)
+{
+	if(err.name == 'HeimdallError')
+	{
+		console.log('Heimdal Says: ' + err.message);
+	}
+	else
+	{
+		if(res.headersSent)
+		{
+			return next(err);
+		}
+		next(err);
+	}
+}
+
+module.exports = Heimdall;
 

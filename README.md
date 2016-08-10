@@ -48,15 +48,14 @@ app.set('view engine', 'ejs');
 app.set('views', './public/views');
 var app = new express();
 //Init heimdall
-app.use( function (req, res, next) {
-    res.Heimdall = new heimdall(res);
-    next();
-} );
+app.use(heimdall.initHeimdall);
 //Example route using hemidall checks
 app.get('/', function (req, res, next) {
     res.Heimdall.emptyCheck(req.query.access_token, 'Access token needed to view this page');
     res.Heimdall.callE('render','index', {user:'Heimdall',page:'Index'});
 });
+//Init heimdall's error handler
+app.use(heimdall.initHeimdallErrorHandler);
 ```
 _One caveat with using Heimdall. Unlike php where we can easily use `die()` / `exit()` to stop code execution. Node.js has no 'easily' implementable equivalent functions. calling res.render or any other response.end / response header change invoking functions after heimdall causes a 'header already sent' error. 
 Heimdall handles this by using the `Heimdall.callE` wrapper for such functions described above. The only thing you need to do is include the function name as the first argument to Heimdall's callE function and subsequent ones as you would normally (and in the same order) pass to the function. So, `res.render('ejsfilename',ejstemplatepayload)` becomes `res.Heimdall.callE('render','ejsfilename',ejstemplatepayload)` AND `res.json({random:1234})` becomes `res.Heimdall.callE('json',{random:1234})`_
