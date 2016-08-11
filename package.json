@@ -1,14 +1,14 @@
 {
-  "name": "heimdall",
+  "name": "mosh",
   "version": "1.0.0",
   "description": "A simple value watcher for Nodejs (Express) Apps",
-  "main": "heimdall.js",
+  "main": "mosh.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/4y0/heimdall.git"
+    "url": "https://github.com/4y0/mosh.git"
   },
   "keywords": [
     "Heimdall",
@@ -17,5 +17,5 @@
   ],
   "author": "4y0",
   "license": "ISC",
-  "homepage": "https://github.com/4y0/heimdall"
+  "homepage": "https://github.com/4y0/mosh"
 }

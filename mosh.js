@@ -1,5 +1,11 @@
-//Class Heimdall
-function Heimdall (res){
+function MoshError(message){
+ 	this.name    = 'MoshError';
+ 	this.message = message;
+ 	this.stack   = (new Error()).stack;
+ }
+
+//Class mosh
+function mosh (res){
 	this.res          = res;
 	this.headers_sent = false;
 }
@@ -10,7 +16,7 @@ function Heimdall (res){
 @default_value
 Return value if not empty, otherwise return default_value
 */
-Heimdall.prototype.initValue = function (value, default_value)
+mosh.prototype.initValue = function (value, default_value)
 {
 	default_value = default_value || null;
 	return value || default_value;
@@ -21,9 +27,9 @@ Heimdall.prototype.initValue = function (value, default_value)
 @data    - Object | Array | String 
 @status  - success | error
 @message - Information about / reason for dump
-Heimdall's default json dump.
+mosh's default json dump.
 */
-Heimdall.prototype.jsonSend = function (data, status, message)
+mosh.prototype.jsonSend = function (data, status, message)
 {
 	this.res.json({
 		'status':status,
@@ -35,9 +41,9 @@ Heimdall.prototype.jsonSend = function (data, status, message)
 /*
 @data    - Object | Array | String  
 @message - Information about / reason for dump
-Heimdall's default fail dump. Status is always error
+mosh's default fail dump. Status is always error
 */
-Heimdall.prototype.fail = function (data, message)
+mosh.prototype.fail = function (data, message)
 {
 	data    = this.initValue(data, []);
 	message = this.initValue(message, "Some error occured");
@@ -45,7 +51,7 @@ Heimdall.prototype.fail = function (data, message)
 }
 
 //Not sure why I left this here
-Heimdall.prototype.success = function (data, message)
+mosh.prototype.success = function (data, message)
 {
 	data    = this.initValue(data, []);
 	message = this.initValue(message, "Action successful");
@@ -60,24 +66,24 @@ Where a check has failed, subsequent calls to methods
 that may re-set response headers or call the end() method
 would trigger a 'headers already sent error' 
 Usage: 
-res.render('/views/index', {view_data:{ name:'Heimdall', version:'1.0.0' }});
+res.render('/views/index', {view_data:{ name:'mosh', version:'1.0.0' }});
 Becomes:>>
-res.Heimdall.callE('render', '/views/index', {view_data:{ name:'Heimdall', version:'1.0.0' }});
+res.mosh.callE('render', '/views/index', {view_data:{ name:'mosh', version:'1.0.0' }});
 */
-Heimdall.prototype.callE = function (func_name) {
+mosh.prototype.callE = function (func_name) {
 	if(!this.headers_sent){
 		this.res[func_name].apply(this.res, Array.prototype.slice.apply(arguments, [1]));
 	}
 }
 
 /*
-Heimdall's watch function
+mosh's watch function
 Simply end code execution when required
 values / conditions are empty / fail
 [Expects value passed to be falsey / undefined before ending program flow.]
 @value - Value to check if empty / undefined
 @message - Message to fail with
-@other - Internally Heimdall dumps json (res.json) data by default. The format is as follows:
+@other - Internally mosh dumps json (res.json) data by default. The format is as follows:
 {
 	status:'success|error',
 	message:'success|error message',
@@ -86,20 +92,20 @@ values / conditions are empty / fail
 If the user doesn't wish to use the inbuilt res.json function, they can pass a value for the @other param
 This will be used to end execution . Sails users for e.g. can pass 'forbidden' =>> res.forbidden(message)
 or 'ok' or 'fail' e.t.c.
-@strictly_undefined - By default Heimdall checks that a value is undefined or falsey before ending execution.
+@strictly_undefined - By default mosh checks that a value is undefined or falsey before ending execution.
 This allows for an edgecase where we simply want to check that a variable is defined regardless of it's
 falsey nature.
 var x = 'false';
-Default way, doing Heimdall.emptyCheck(x, 'Value is empty');
+Default way, doing mosh.emptyCheck(x, 'Value is empty');
 The script ends with the message value is empty. But we only want to check if 
 x is undefined. The internal condition typeof x == 'undefined' || !x will always evalute 
 truthy as !'false' == true
 With strictly_undefined set to true, we remove the falsey check bit and only use the undefined check
 var x = 'false';
-Heimdall.emptyCheck(x, 'Value is empty', null, true); //Only check if x is defined
-@callback if user doesn't want to use heimdall's inbuilt payload structure, they can pass a callback function to handle failure
+mosh.emptyCheck(x, 'Value is empty', null, true); //Only check if x is defined
+@callback if user doesn't want to use mosh's inbuilt payload structure, they can pass a callback function to handle failure
 */
-Heimdall.prototype.emptyCheck = function(value, message, other, strictly_undefined, callback)
+mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, callback)
 {
 	/*
 	If we have sent an error message to the user.. we shouldn't do any checks again
@@ -125,7 +131,7 @@ Heimdall.prototype.emptyCheck = function(value, message, other, strictly_undefin
 			{  
 				this.fail(message);
 			}
-			throw new HeimdallError('Heimdall Precludes Exec from proceeding because: ' + message);
+			throw new MoshError('mosh Precludes Exec from proceeding because: ' + message);
 		}
 	}
 }
@@ -134,7 +140,7 @@ Heimdall.prototype.emptyCheck = function(value, message, other, strictly_undefin
 @keys         - Array of keys to lookup in @array_source
 @array_source - Array source to run check against
 */
-Heimdall.prototype.multiArrayCheck = function(array_source, keys)
+mosh.prototype.multiArrayCheck = function(array_source, keys)
 {
 	var error_messages = [];
 	function keys_foreach_cb (key) 
@@ -152,10 +158,10 @@ Heimdall.prototype.multiArrayCheck = function(array_source, keys)
 
 
 /*
-@func function to extend Heimdall with
+@func function to extend mosh with
 @name Property name to assign func to.
 */
-Heimdall.prototype.extendHeimdall = function (func, name)
+mosh.prototype.extendmosh = function (func, name)
 {
 	var getFuncName = function (name)
 	{
@@ -172,27 +178,27 @@ Heimdall.prototype.extendHeimdall = function (func, name)
 	{
 		return null; //anonymous function passed
 	}
-	Heimdall.prototype[name] = func;
+	mosh.prototype[name] = func;
 }
 
 //Not sure why this one is here
-Heimdall.prototype.forbidden = function (value, message)
+mosh.prototype.forbidden = function (value, message)
 {
 	message = this.initValue(message, 'Access denied');
 	this.emptyCheck(value, message, 'forbidden');
 }
 
-Heimdall.initHeimdall = function(req, res, next)
+mosh.initMosh = function(req, res, next)
 {
-	res.Heimdall = new Heimdall(res);
+	res.mosh = new mosh(res);
 	next();
 }
 
-Heimdall.initHeimdallErrorHandler = function(err, req, res, next)
+mosh.initMoshErrorHandler = function(err, req, res, next)
 {
-	if(err.name == 'HeimdallError')
+	if(err.name == 'MoshError')
 	{
-		console.log('Heimdal Says: ' + err.message);
+		console.log('Mosh Error: ' + err.message);
 	}
 	else
 	{
@@ -204,5 +210,5 @@ Heimdall.initHeimdallErrorHandler = function(err, req, res, next)
 	}
 }
 
-module.exports = Heimdall;
+module.exports = mosh;
 

@@ -1,6 +1,6 @@
-# Heimdall.js 
+# mosh.js 
 ## _A simple null / empty checker_
-Heimdall.js is a simple tool for null or undefined or falsey value checks in node.js apps. It provides a neat abstraction for if-else blocks and relieves the developer of the headaches that come with logic-fuzz.
+mosh.js is a simple tool for null or undefined or falsey value checks in node.js apps. It provides a neat abstraction for if-else blocks and relieves the developer of the headaches that come with logic-fuzz.
 ### Example Use-case 1
 **Typical flow**
 ```
@@ -11,11 +11,11 @@ if (!secure) {
   //other stuff here
 }
 ```
-**Heimdall flow**
+**mosh flow**
 ```
 var secure = req.param('secure');
-res.Heimdall.emptyCheck(secure, 'This request has to be secure', 'forbidden');
-//If secure is empty, code won't go beyond the Heimdall.emptyCheck call
+res.mosh.emptyCheck(secure, 'This request has to be secure', 'forbidden');
+//If secure is empty, code won't go beyond the mosh.emptyCheck call
 // other stuff here
 ```
 
@@ -30,10 +30,10 @@ if(!client_id || !client_secret){
 }
 //other app stuff
 ```
-**Heimdall flow**
+**mosh flow**
 ```
-res.Heimdall.multiArrayCheck(req.query, ['client_id','client_secret']); 
-//Code won't go beyond the Heimdall.multiArrayCheck call if any of the passed values fail.
+res.mosh.multiArrayCheck(req.query, ['client_id','client_secret']); 
+//Code won't go beyond the mosh.multiArrayCheck call if any of the passed values fail.
 var client_id     = req.query.client_id;
 var client_secret = req.query.client_secret;
 ```
@@ -60,39 +60,39 @@ else
 
 }
 ```
-**Heimdall flow**
+**mosh flow**
 ```
-res.Heimdall.emptyCheck(req.params.user_id, 'User id is required', 'fail');
+res.mosh.emptyCheck(req.params.user_id, 'User id is required', 'fail');
 var user_id = req.params.user_id;
 UserModel.findOne(user_id, function(user, err){
-	res.Heimdall.emptyCheck(user, 'User not found', 'fail');
+	res.mosh.emptyCheck(user, 'User not found', 'fail');
 	//other stuff to happen here
 });
 ```
 
 ### How to use
- Intall using npm `sudo npm install heimdall`
+ Intall using npm `sudo npm install mosh`
  
- Require heimdall in your code and init as a middleware before your route definitions
+ Require mosh in your code and init as a middleware before your route definitions
 ```
-var heimdall = require('heimdall'),
+var mosh = require('mosh'),
     express  = require('express');
 app.set('view engine', 'ejs');
 app.set('views', './public/views');
 var app = new express();
-//Init heimdall
-app.use(heimdall.initHeimdall);
-//Example route using hemidall checks
+//Init mosh
+app.use(mosh.initMosh);
+//Example route using mosh checks
 app.get('/', function (req, res, next) {
-    res.Heimdall.emptyCheck(req.query.access_token, 'Access token needed to view this page');
-    res.Heimdall.callE('render','index', {user:'Heimdall',page:'Index'});
+    res.mosh.emptyCheck(req.query.access_token, 'Access token needed to view this page');
+    res.mosh.callE('render','index', {user:'mosh',page:'Index'});
 });
-//Init heimdall's error handler
-app.use(heimdall.initHeimdallErrorHandler);
+//Init mosh's error handler
+app.use(mosh.initMoshErrorHandler);
 ```
-_One caveat with using Heimdall. Unlike php where we can easily use `die()` / `exit()` to stop code execution. Node.js has no 'easily' implementable equivalent functions. calling res.render or any other response.end / response header change invoking functions after heimdall causes a 'header already sent' error. 
-Heimdall handles this by using the `Heimdall.callE` wrapper for such functions described above. The only thing you need to do is include the function name as the first argument to Heimdall's callE function and subsequent ones as you would normally (and in the same order) pass to the function. So, `res.render('ejsfilename',ejstemplatepayload)` becomes `res.Heimdall.callE('render','ejsfilename',ejstemplatepayload)` AND `res.json({random:1234})` becomes `res.Heimdall.callE('json',{random:1234})`_
+_One caveat with using mosh. Unlike php where we can easily use `die()` / `exit()` to stop code execution. Node.js has no 'easily' implementable equivalent functions. calling res.render or any other response.end / response header change invoking functions after mosh causes a 'header already sent' error. 
+mosh handles this by using the `mosh.callE` wrapper for such functions described above. The only thing you need to do is include the function name as the first argument to mosh's callE function and subsequent ones as you would normally (and in the same order) pass to the function. So, `res.render('ejsfilename',ejstemplatepayload)` becomes `res.mosh.callE('render','ejsfilename',ejstemplatepayload)` AND `res.json({random:1234})` becomes `res.mosh.callE('json',{random:1234})`_
 
-An example API project using Heimdall can be found here. Feel free to fork and play around. Also, contributions / issues / feature requests are welcome 
+An example API project using mosh can be found here. Feel free to fork and play around. Also, contributions / issues / feature requests are welcome 
 
 
