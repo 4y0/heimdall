@@ -1,6 +1,33 @@
 # mosh.js 
 ## _A simple null / empty checker_
 mosh.js is a simple tool for null or undefined or falsey value checks in node.js apps. It provides a neat abstraction for if-else blocks and relieves the developer of the headaches that come with logic-fuzz.
+
+
+### How to use
+ Intall using npm `sudo npm install mosh`
+ 
+ Require mosh in your code and init as a middleware before your route definitions
+```
+var mosh = require('mosh'),
+    express  = require('express');
+app.set('view engine', 'ejs');
+app.set('views', './public/views');
+var app = new express();
+//Init mosh
+app.use(mosh.initMosh);
+
+//Example route using mosh checks
+app.get('/', function (req, res, next) {
+    res.mosh.emptyCheck(req.query.access_token, 'Access token needed to view this page');
+    res.mosh.callE('render','index', {user:'mosh',page:'Index'});
+});
+
+//Init mosh's error handler
+app.use(mosh.initMoshErrorHandler);
+```
+_One caveat with using mosh. Unlike php where we can easily use `die()` / `exit()` to stop code execution. Node.js has no 'easily' implementable equivalent functions. calling res.render or any other response.end / response header change invoking functions after mosh causes a 'header already sent' error. 
+mosh handles this by using the `mosh.callE` wrapper for such functions described above. The only thing you need to do is include the function name as the first argument to mosh's callE function and subsequent ones as you would normally (and in the same order) pass to the function. So, `res.render('ejsfilename',ejstemplatepayload)` becomes `res.mosh.callE('render','ejsfilename',ejstemplatepayload)` AND `res.json({random:1234})` becomes `res.mosh.callE('json',{random:1234})`_
+
 ### Example Use-case 1
 **Typical flow**
 ```
@@ -86,29 +113,7 @@ res.mosh.multiDepthCheck(req.body, ['IGuser', 'handle'],'Required handle propert
 var IGUserHandle = req.body.IGUser.handle
 ```
 
-### How to use
- Intall using npm `sudo npm install mosh`
- 
- Require mosh in your code and init as a middleware before your route definitions
-```
-var mosh = require('mosh'),
-    express  = require('express');
-app.set('view engine', 'ejs');
-app.set('views', './public/views');
-var app = new express();
-//Init mosh
-app.use(mosh.initMosh);
-//Example route using mosh checks
-app.get('/', function (req, res, next) {
-    res.mosh.emptyCheck(req.query.access_token, 'Access token needed to view this page');
-    res.mosh.callE('render','index', {user:'mosh',page:'Index'});
-});
-//Init mosh's error handler
-app.use(mosh.initMoshErrorHandler);
-```
-_One caveat with using mosh. Unlike php where we can easily use `die()` / `exit()` to stop code execution. Node.js has no 'easily' implementable equivalent functions. calling res.render or any other response.end / response header change invoking functions after mosh causes a 'header already sent' error. 
-mosh handles this by using the `mosh.callE` wrapper for such functions described above. The only thing you need to do is include the function name as the first argument to mosh's callE function and subsequent ones as you would normally (and in the same order) pass to the function. So, `res.render('ejsfilename',ejstemplatepayload)` becomes `res.mosh.callE('render','ejsfilename',ejstemplatepayload)` AND `res.json({random:1234})` becomes `res.mosh.callE('json',{random:1234})`_
 
-An example API project using mosh can be found here. Feel free to fork and play around. Also, contributions / issues / feature requests are welcome 
+
 
 
