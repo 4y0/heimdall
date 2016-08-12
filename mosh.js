@@ -58,12 +58,12 @@ mosh.prototype.jsonSend = function (data, status, message, status_code, error_co
 @message - Information about / reason for dump
 mosh's default fail dump. Status is always error
 */
-mosh.prototype.fail = function (data, message, code)
+mosh.prototype.fail = function (data, message, status_code, error_code)
 {
 	data    = this.initValue(data, null);
 	message = this.initValue(message, "Some error occured");
 	code    = this.initValue(code, null);
-	this.jsonSend(data, 'error', message, code);
+	this.jsonSend(data, 'error', message, status_code, error_code);
 }
 
 //Not sure why I left this here
