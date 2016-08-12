@@ -29,7 +29,7 @@ mosh.prototype.initValue = function (value, default_value)
 @message - Information about / reason for dump
 mosh's default json dump.
 */
-mosh.prototype.jsonSend = function (data, status, message, code)
+mosh.prototype.jsonSend = function (data, status, message, status_code, error_code)
 {
 	var response_payload = {
 		'status':status
@@ -42,9 +42,12 @@ mosh.prototype.jsonSend = function (data, status, message, code)
 		response_payload.message = message;
 	}
 
-	if(code){
-		this.res.status(code);
-		response_payload.code = code;
+	if(status_code){
+		this.res.status(code); 
+	}
+
+	if(error_code){
+		response_payload.code = error_code;
 	}
 
 	this.res.json(response_payload);
@@ -118,7 +121,7 @@ var x = 'false';
 mosh.emptyCheck(x, 'Value is empty', null, true); //Only check if x is defined
 @callback if user doesn't want to use mosh's inbuilt payload structure, they can pass a callback function to handle failure
 */
-mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, code, callback)
+mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, status_code, error_code, callback)
 {
 	/*
 	If we have sent an error message to the user.. we shouldn't do any checks again
@@ -143,7 +146,7 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 			}
 			else
 			{  
-				this.fail(null,message,code);
+				this.fail(null,message, status_code, error_code);
 			}
 			throw new MoshError('mosh Precludes Exec from proceeding because: ' + message);
 		}
@@ -153,8 +156,9 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 /*
 @keys         - Array of keys to lookup in @array_source
 @array_source - Array source to run check against
+@code       
 */
-mosh.prototype.multiArrayCheck = function(array_source, keys, code)
+mosh.prototype.multiArrayCheck = function(array_source, keys, status_code, error_code)
 {
 	var error_messages = [];
 	function keys_foreach_cb (key) 
@@ -167,14 +171,14 @@ mosh.prototype.multiArrayCheck = function(array_source, keys, code)
 	keys.forEach( keys_foreach_cb );
 
 	//if error_messages is populated, fail with error_messages
-	this.emptyCheck(error_messages.length < 1, error_messages.join(' , '), null, false, code);
+	this.emptyCheck(error_messages.length < 1, error_messages.join(' , '), null, false, status_code, error_code);
 }
 
 /*
 @object_source - Object to run a depth check on
 @depths        - An array of keys to depth check
 */
-mosh.prototype.multiDepthCheck = function(object_source, depths, message, code)
+mosh.prototype.multiDepthCheck = function(object_source, depths, message, status_code, error_code)
 {
 	message = this.initValue(message, 'Depth check failed');
 	if(!object_source || !depths || !depths.length)
@@ -192,7 +196,7 @@ mosh.prototype.multiDepthCheck = function(object_source, depths, message, code)
 			continue;
 		}
 
-		this.emptyCheck( base && base[current_depth], message, null, false, code );
+		this.emptyCheck( base && base[current_depth], message, null, false, status_code, error_code );
 	}
 
 }
