@@ -62,7 +62,7 @@ mosh.prototype.fail = function (data, message, status_code, error_code)
 {
 	data    = this.initValue(data, null);
 	message = this.initValue(message, "Some error occured");
-	code    = this.initValue(code, null);
+	code    = this.initValue(status_code, null);
 	this.jsonSend(data, 'error', message, status_code, error_code);
 }
 
