@@ -70,6 +70,22 @@ UserModel.findOne(user_id, function(user, err){
 });
 ```
 
+### Example Use-case 4
+**Typical flow**
+```
+if(req.body.IGUser && req.body.IGuser.handle){
+	var IGUserHandle = req.body.IGUser.handle;
+}
+else{
+	res.fail('Required handle property not found in USER');
+}
+```
+**mosh flow**
+```
+res.mosh.multiDepthCheck(req.body, ['IGuser', 'handle'],'Required handle property not found in USER');
+var IGUserHandle = req.body.IGUser.handle
+```
+
 ### How to use
  Intall using npm `sudo npm install mosh`
  
