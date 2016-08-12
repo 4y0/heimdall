@@ -130,7 +130,7 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 	{
 		message            = this.initValue(message, 'Value is expected');
 		strictly_undefined = this.initValue(strictly_undefined, false);
-		code               = this.initValue(code, null);
+		status_code        = this.initValue(status_code, null);
 		var valueAssertion = strictly_undefined ? true : !value;
 
 		if(typeof value == 'undefined' || valueAssertion){
