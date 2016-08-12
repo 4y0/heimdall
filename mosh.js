@@ -43,7 +43,7 @@ mosh.prototype.jsonSend = function (data, status, message, status_code, error_co
 	}
 
 	if(status_code){
-		this.res.status(code); 
+		this.res.status(status_code); 
 	}
 
 	if(error_code){
