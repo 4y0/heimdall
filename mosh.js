@@ -156,6 +156,33 @@ mosh.prototype.multiArrayCheck = function(array_source, keys)
 	this.emptyCheck(error_messages.length < 1, error_messages.join(' , '));
 }
 
+/*
+@object_source - Object to run a depth check on
+@depths        - An array of keys to depth check
+*/
+mosh.prototype.multiDepthCheck = function(object_source, depths, message)
+{
+	message = this.initValue(message, 'Depth check failed');
+	if(!object_source || !depths || !depths.length)
+	{
+		return;
+	}
+	var base = false; 
+	var depth_length = depths.length;
+	var current_depth = {};
+	for(var x = 0; x < depth_length; x++)
+	{
+		current_depth = depths[x];
+		if(!base && typeof object_source[current_depth] != 'undefined'){
+			base = object_source[current_depth];
+			continue;
+		}
+
+		this.emptyCheck( base && base[current_depth], message );
+	}
+
+}
+
 
 /*
 @func function to extend mosh with
