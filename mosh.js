@@ -34,19 +34,19 @@ mosh.prototype.jsonSend = function (data, status, message, status_code, error_co
 	var response_payload = {
 		'status':status
 	};
-	if(data){
+	if (data) {
 		response_payload.data = data;
 	}
 
-	if(message && message != ''){
+	if (message && message != '') {
 		response_payload.message = message;
 	}
 
-	if(status_code){
+	if (status_code) {
 		this.res.status(status_code); 
 	}
 
-	if(error_code){
+	if (error_code) {
 		response_payload.code = error_code;
 	}
 
@@ -61,8 +61,7 @@ mosh's default fail dump. Status is always error
 mosh.prototype.fail = function (data, message, status_code, error_code)
 {
 	data    = this.initValue(data, null);
-	message = this.initValue(message, "Some error occured");
-	code    = this.initValue(status_code, null);
+	message = this.initValue(message, "Some error occured"); 
 	this.jsonSend(data, 'error', message, status_code, error_code);
 }
 
@@ -87,7 +86,7 @@ Becomes:>>
 res.mosh.callE('render', '/views/index', {view_data:{ name:'mosh', version:'1.0.0' }});
 */
 mosh.prototype.callE = function (func_name) {
-	if(!this.headers_sent){
+	if (!this.headers_sent) {
 		this.res[func_name].apply(this.res, Array.prototype.slice.apply(arguments, [1]));
 	}
 }
