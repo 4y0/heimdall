@@ -207,17 +207,8 @@ mosh.prototype.multiDepthCheck = function(object_source, depths, message, status
 */
 mosh.prototype.extendmosh = function (func, name)
 {
-	var getFuncName = function (name)
-	{
-		var name_pattern = /\s*function\s*([a-zA-Z_]+[0-9]*[a-zA-Z_]*)\s*\(\s*/;
-		var matches = name.match(name_pattern);
-		if(matches && matches[1]){
-			return matches[1];
-		}
-
-		return false;
-	};
-	name = name || getFuncName(name);
+	
+	name = name || func.name;
 	if(name === false)
 	{
 		return null; //anonymous function passed
