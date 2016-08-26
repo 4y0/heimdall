@@ -1,6 +1,6 @@
 {
   "name": "mosh",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A simple value watcher for Nodejs (Express) Apps",
   "main": "mosh.js",
   "scripts": {
