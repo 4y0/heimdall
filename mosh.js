@@ -141,11 +141,17 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 			}
 			if(other)
 			{
-				this.res[other](message);
+				if(this.res){
+					this.res[other](message);
+				}
+				
 			}
 			else
-			{  
-				this.fail(null,message, status_code, error_code);
+			{   
+				if(this.res){
+					this.fail(null,message, status_code, error_code);
+				}
+		
 			}
 			throw new MoshError('mosh Precludes Exec from proceeding because: ' + message);
 		}

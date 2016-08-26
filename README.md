@@ -114,6 +114,16 @@ var IGUserHandle = req.body.IGUser.handle
 ```
 
 
+### Use Mosh outside of express
+```
+var Mosh = require('mosh');
+var mosh = new Mosh(null); //Don't pass a res object
+
+mosh.emptyCheck(false, 'You shall not pass'); //Throws an error with the message you shall not pass.
+mosh.multiArrayCheck({'name':'Lawal',token:'0399940'}, ['client_id','client_secret']);  //Throws an error
+```
+
+
 
 
 
