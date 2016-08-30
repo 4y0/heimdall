@@ -153,7 +153,10 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 				}
 		
 			}
-			throw new MoshError('mosh Precludes Exec from proceeding because: ' + message);
+			if (typeof message === "string") {
+				throw new MoshError('mosh Precludes Exec from proceeding because: ' + message);
+			}
+			throw message;
 		}
 	}
 }
