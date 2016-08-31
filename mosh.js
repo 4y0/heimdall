@@ -5,9 +5,14 @@ function MoshError(message){
  }
 
 //Class mosh
-function mosh (res){
+function mosh (res, config){
 	this.res          = res;
 	this.headers_sent = false;
+	this.logging      = false;
+
+	if(config && config.logging){
+		this.logging = config.logging;
+	}	
 }
 
 
@@ -242,7 +247,11 @@ mosh.initMoshErrorHandler = function(err, req, res, next)
 {
 	if(err.name == 'MoshError')
 	{
-		console.log('Mosh Error: ' + err.message);
+		if(res.mosh && res.mosh.logging)
+		{
+			console.log('Mosh Error: ' + err.message);
+		}
+		
 	}
 	else
 	{
