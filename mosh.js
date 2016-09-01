@@ -130,7 +130,7 @@ mosh.prototype.emptyCheck = function(value, message, other, strictly_undefined, 
 	/*
 	If we have sent an error message to the user.. we shouldn't do any checks again
 	*/
-	if(!this.headers_sent)
+	if(!this.res || (!this.headers_sent && this.res))
 	{
 		message            = this.initValue(message, 'Value is expected');
 		strictly_undefined = this.initValue(strictly_undefined, false);
